@@ -1,25 +1,41 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useEffect} from 'react'
+import Register from './components/Register'
+import Login from './components/Login'
+import HomePage from './components/HomePage'
+import {connect} from 'react-redux'
+import {getUpdate} from './redux/store'
+import {Route, Redirect} from 'react-router-dom'
 
-function App() {
+
+
+function App({getUpdate, isLoading}) {
+
+ 
+
+  useEffect(() => {
+    getUpdate()
+  }, [])
+
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <>
+          {/* <Redirect from="/" to="/home" /> */}
+          {isLoading  ? `Wait...` : <Route exact path='/home' render={() => <HomePage/>}/>}
+          <Route path='/register' render={() => <Register/>}/>
+          <Route path='/login' render={() => <Login/>}/>
+      </>     
+    
+    </>
+   
+    
   );
 }
 
-export default App;
+let mapStateToProps = (state) => {
+  return {
+    isLoading: state.isLoading
+  }
+}
+
+export default  connect(mapStateToProps, {getUpdate})(App);
